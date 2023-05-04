@@ -22,7 +22,7 @@ title: vik0t0r # the main title
 
 tagline: Hacker attempt # it will display as the sub-title
 
-description: Here I write what i want to share, mostly hacking staff and so on  # used by seo meta and the atom feed
+description: Here I write what i want to share, mostly hacking staff and so on.  # used by seo meta and the atom feed
 
 # fill in the protocol & hostname for your site, e.g., 'https://username.github.io'
 url: "https://vik0t0r.github.io"
