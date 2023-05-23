@@ -4,7 +4,7 @@ title: Some cool photos which can be use as Wallpapers
 date: 2023-05-23 17:28 +0200
 categories: [Photo, Wallpaper]
 tags: [image, photo, wallpaper]
-img_path: assets/img/photos/
+img_path: /assets/img/photos/
 ---
 Here there are some photos that I took a while ago, I think that they can be used as wallpapers but feel free to use them anywhere, the dragon one is from the internet but it's my favourite background so there it goes.\
 All have a 16:9 ratio.
