@@ -2,8 +2,8 @@
 layout: post
 title: Decrypting salto proaccess service operators' password
 date: 2023-11-05 16:50 +0200
-categories: [Hardware]
-tags: [hacking, software, salto]
+categories: [Hacking, Software]
+tags: [hacking, software, salto, locks, reverse engineering]
 img_path: /assets/img/salto/
 ---
 ## Introduction
