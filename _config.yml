@@ -20,7 +20,7 @@ timezone: Europe/Madrid
 
 title: vik0t0r # the main title
 
-tagline: Hacker attempt # it will display as the sub-title
+tagline: Hacker wannabe # it will display as the sub-title
 
 description: Here I write what i want to share, mostly hacking staff and so on.  # used by seo meta and the atom feed
 
@@ -28,7 +28,7 @@ description: Here I write what i want to share, mostly hacking staff and so on. 
 url: "https://vik0t0r.github.io"
 #url: "http://127.0.0.1:4000"
 github:
-  username: vicdeaj # change to your github username
+  username: vik0t0r # change to your github username
 
 twitter:
   username: vik0t0r # change to your twitter username
