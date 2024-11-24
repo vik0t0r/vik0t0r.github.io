@@ -3,7 +3,7 @@ layout: post
 title: Demystifying yamaha immobilisers
 date: 2023-06-29 16:50 +0200
 categories: [Hacking, Hardware]
-tags: [hacking, electronics, hardware, how_does_it_work, motorsport, reverse engineering]
+tags: [hacking, electronics, hardware, how does it work, motorsport, reverse engineering]
 img_path: /assets/img/yamaha/
 ---
 ## Introduction
