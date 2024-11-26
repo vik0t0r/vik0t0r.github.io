@@ -4,7 +4,7 @@ title: Decrypting salto proaccess service operators' password
 date: 2023-11-05 16:50 +0200
 categories: [Hacking, Software]
 tags: [hacking, software, salto, locks, reverse engineering]
-img_path: /assets/img/salto/
+media_subpath: /assets/img/salto/
 ---
 ## Introduction
 In this post I will show you how operator passwords can be recovered in cleartext from a salto proaccess services

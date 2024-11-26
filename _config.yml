@@ -98,7 +98,7 @@ theme_mode: dark # [light|dark]
 # will be added to all media resources (site avatar, posts' images, audio and video files) paths starting with '/'
 #
 # e.g. 'https://cdn.com'
-img_cdn: 'https://vik0t0r.github.io'
+cdn: 'https://vik0t0r.github.io'
 #img_cdn: 'http://127.0.0.1:4000'
 
 # the avatar on sidebar, support local or CORS resources

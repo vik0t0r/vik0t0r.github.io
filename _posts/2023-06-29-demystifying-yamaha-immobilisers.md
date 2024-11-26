@@ -4,7 +4,7 @@ title: Demystifying yamaha immobilisers
 date: 2023-06-29 16:50 +0200
 categories: [Hacking, Hardware]
 tags: [hacking, electronics, hardware, how does it work, motorsport, reverse engineering]
-img_path: /assets/img/yamaha/
+media_subpath: /assets/img/yamaha/
 ---
 ## Introduction
 In this post I will explain you how does the yamaha motorbike immobiliser system work (only tested on the yamaha mt-07 2017).

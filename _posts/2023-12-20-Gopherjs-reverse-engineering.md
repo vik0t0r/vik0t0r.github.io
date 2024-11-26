@@ -4,7 +4,7 @@ title: Gopherjs reverse engineering
 date: 2023-12-20 16:50 +0200
 categories: [Hacking, Software]
 tags: [hacking, software, javascript, golang, reverse engineering, android]
-img_path: /assets/img/gopherjs/
+media_subpath: /assets/img/gopherjs/
 ---
 ## Introduction
 <a href="https://github.com/gopherjs/gopherjs" target="_blank">Gopherjs</a>

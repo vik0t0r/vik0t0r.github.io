@@ -4,7 +4,7 @@ title: Flare-On 11 Write-Up Part 1
 date: 2024-11-23 17:07 +0100
 categories: [Hacking, Software]
 tags: [hacking, software, capture the flag, write-up, golang, reverse engineering]
-img_path: /assets/img/flareon11/
+media_subpath: /assets/img/flareon11/
 ---
 
 Over the past few weeks, I took part in the eleventh [FLARE-ON](http://flare-on.com) Reverse Engineering Capture-the-Flag (CTF) competition. 
