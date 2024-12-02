@@ -392,5 +392,4 @@ rule flareon { strings: $f = "1RuleADayK33p$Malw4r3Aw4y@flare-on.com" condition:
 ```
 ## Continuation
 
-I will soon be publishing the writeups for the remaining challenges. 
-Stay tuned as we unravel more puzzles, crack hashes, and reverse-engineer solutions to uncover the keys to victory.
+Check the following post [here](/posts/flare-on-11-write-up-part-2/)
