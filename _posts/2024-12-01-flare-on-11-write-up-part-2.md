@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Flare-On 11 Write-Up Part 2
-date: 2024-11-23 17:07 +0100
+date: 2024-12-01 17:07 +0100
 categories: [Hacking, Software]
 tags: [hacking, software, capture the flag, write-up, reverse engineering]
 media_subpath: /assets/img/flareon11_2/
@@ -185,4 +185,4 @@ That wasn't that hard, was it?
 
 ## Continuation
 
-This was a short post, I will soon be publishing the writeups for the remaining challenges. 
+Check the following post [here](/posts/flare-on-11-write-up-part-3/)
