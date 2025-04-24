@@ -72,10 +72,10 @@ If everything has worked out, launching the app should cause it to freeze at sta
 
 We will use [this script](https://github.com/NVISOsecurity/disable-flutter-tls-verification) to disable TLS certificate validation. However, on emulators, loaded libraries may not appear with `Process.findModuleByName()`, so we need to disable the check.
 
-We need to change the following lines:Change the following lines:
+Change the following lines:
 
 ```js
-var m = Process.findModuleByName(platformConfig["modulename"]);
+    var m = Process.findModuleByName(platformConfig["modulename"]);
 
     if (m === null) {
         console.log('[!] Flutter library not found');
@@ -110,8 +110,8 @@ If everything works correctly, you should now see the app's traffic in cleartext
 In this post, we successfully intercepted and analyzed network traffic from a Flutter app on an Android emulator using Frida. This approach, which doesn't require root access, enables effective traffic analysis and can be used for further security testing and reverse engineering.
 
 ## References
-- https://koz.io/using-frida-on-android-without-root/
-- https://blog.nviso.eu/2022/08/18/intercept-flutter-traffic-on-ios-and-android-http-https-dio-pinning/
-- https://github.com/NVISOsecurity/disable-flutter-tls-verification
-- https://blog.mindedsecurity.com/2024/05/bypassing-certificate-pinning-on.html
+- [https://koz.io/using-frida-on-android-without-root/](https://koz.io/using-frida-on-android-without-root/)
+- [https://blog.nviso.eu/2022/08/18/intercept-flutter-traffic-on-ios-and-android-http-https-dio-pinning/](https://koz.io/using-frida-on-android-without-root/)
+- [https://github.com/NVISOsecurity/disable-flutter-tls-verification](https://koz.io/using-frida-on-android-without-root/)
+- [https://blog.mindedsecurity.com/2024/05/bypassing-certificate-pinning-on.html](https://koz.io/using-frida-on-android-without-root/)
 

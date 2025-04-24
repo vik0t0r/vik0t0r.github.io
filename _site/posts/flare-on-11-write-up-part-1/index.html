@@ -1,0 +1,363 @@
+<!doctype html><html lang="en" ><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta name="theme-color" media="(prefers-color-scheme: light)" content="#f7f7f7"><meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1b1b1e"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="viewport" content="width=device-width, user-scalable=no initial-scale=1, shrink-to-fit=no, viewport-fit=cover" ><meta name="generator" content="Jekyll v4.4.1" /><meta property="og:title" content="Flare-On 11 Write-Up Part 1" /><meta property="og:locale" content="en" /><meta name="description" content="Over the past few weeks, I took part in the eleventh FLARE-ON Reverse Engineering Capture-the-Flag (CTF) competition." /><meta property="og:description" content="Over the past few weeks, I took part in the eleventh FLARE-ON Reverse Engineering Capture-the-Flag (CTF) competition." /><link rel="canonical" href="https://vik0t0r.github.io/posts/flare-on-11-write-up-part-1/" /><meta property="og:url" content="https://vik0t0r.github.io/posts/flare-on-11-write-up-part-1/" /><meta property="og:site_name" content="vik0t0r" /><meta property="og:type" content="article" /><meta property="article:published_time" content="2024-11-23T17:07:00+01:00" /><meta name="twitter:card" content="summary" /><meta property="twitter:title" content="Flare-On 11 Write-Up Part 1" /><meta name="twitter:site" content="@vik0t0r" /> <script type="application/ld+json"> {"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-12-02T23:15:05+01:00","datePublished":"2024-11-23T17:07:00+01:00","description":"Over the past few weeks, I took part in the eleventh FLARE-ON Reverse Engineering Capture-the-Flag (CTF) competition.","headline":"Flare-On 11 Write-Up Part 1","mainEntityOfPage":{"@type":"WebPage","@id":"https://vik0t0r.github.io/posts/flare-on-11-write-up-part-1/"},"url":"https://vik0t0r.github.io/posts/flare-on-11-write-up-part-1/"}</script><title>Flare-On 11 Write-Up Part 1 | vik0t0r</title><link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicons/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicons/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicons/favicon-16x16.png"><link rel="manifest" href="/assets/img/favicons/site.webmanifest"><link rel="shortcut icon" href="/assets/img/favicons/favicon.ico"><meta name="apple-mobile-web-app-title" content="vik0t0r"><meta name="application-name" content="vik0t0r"><meta name="msapplication-TileColor" content="#da532c"><meta name="msapplication-config" content="/assets/img/favicons/browserconfig.xml"><meta name="theme-color" content="#ffffff"><link rel="preconnect" href="https://fonts.googleapis.com" ><link rel="dns-prefetch" href="https://fonts.googleapis.com" ><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="dns-prefetch" href="https://fonts.gstatic.com" ><link rel="preconnect" href="https://cdn.jsdelivr.net" ><link rel="dns-prefetch" href="https://cdn.jsdelivr.net" ><link rel="stylesheet" href="/assets/css/jekyll-theme-chirpy.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400&family=Source+Sans+Pro:wght@400;600;700;900&display=swap"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.7.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tocbot@4.32.2/dist/tocbot.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/loading-attribute-polyfill@2.1.1/dist/loading-attribute-polyfill.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox@3.3.0/dist/css/glightbox.min.css"> <script src="/assets/js/dist/theme.min.js"></script> <script defer src="https://cdn.jsdelivr.net/combine/npm/simple-jekyll-search@1.10.0/dest/simple-jekyll-search.min.js,npm/loading-attribute-polyfill@2.1.1/dist/loading-attribute-polyfill.umd.min.js,npm/glightbox@3.3.0/dist/js/glightbox.min.js,npm/clipboard@2.0.11/dist/clipboard.min.js,npm/dayjs@1.11.13/dayjs.min.js,npm/dayjs@1.11.13/locale/en.js,npm/dayjs@1.11.13/plugin/relativeTime.js,npm/dayjs@1.11.13/plugin/localizedFormat.js,npm/tocbot@4.32.2/dist/tocbot.min.js"></script> <script defer src="/assets/js/dist/post.min.js"></script> <script defer src="/app.min.js?baseurl=/&register=true" ></script><body><aside aria-label="Sidebar" id="sidebar" class="d-flex flex-column align-items-end"><header class="profile-wrapper"> <a href="/" id="avatar" class="rounded-circle"><img src="https://vik0t0r.github.io/assets/img/avatar.png" width="112" height="112" alt="avatar" onerror="this.style.display='none'"></a> <a class="site-title d-block" href="/">vik0t0r</a><p class="site-subtitle fst-italic mb-0">Hacker wannabe</p></header><nav class="flex-column flex-grow-1 w-100 ps-0"><ul class="nav"><li class="nav-item"> <a href="/" class="nav-link"> <i class="fa-fw fas fa-home"></i> <span>HOME</span> </a><li class="nav-item"> <a href="/categories/" class="nav-link"> <i class="fa-fw fas fa-stream"></i> <span>CATEGORIES</span> </a><li class="nav-item"> <a href="/tags/" class="nav-link"> <i class="fa-fw fas fa-tags"></i> <span>TAGS</span> </a><li class="nav-item"> <a href="/archives/" class="nav-link"> <i class="fa-fw fas fa-archive"></i> <span>ARCHIVES</span> </a><li class="nav-item"> <a href="/about/" class="nav-link"> <i class="fa-fw fas fa-info-circle"></i> <span>ABOUT</span> </a></ul></nav><div class="sidebar-bottom d-flex flex-wrap align-items-center w-100"> <button type="button" class="btn btn-link nav-link" aria-label="Switch Mode" id="mode-toggle"> <i class="fas fa-adjust"></i> </button> <span class="icon-border"></span> <a href="https://github.com/vik0t0r" aria-label="github" target="_blank" rel="noopener noreferrer" > <i class="fab fa-github"></i> </a> <a href="https://twitter.com/vik0t0r" aria-label="twitter" target="_blank" rel="noopener noreferrer" > <i class="fa-brands fa-x-twitter"></i> </a> <a href="javascript:location.href = 'mailto:' + ['vik0t0r','proton.me'].join('@')" aria-label="email" > <i class="fas fa-envelope"></i> </a> <a href="https://www.linkedin.com/in/vik0t0r/" aria-label="linkedin" target="_blank" rel="noopener noreferrer" > <i class="fab fa-linkedin"></i> </a> <a href="/feed.xml" aria-label="rss" > <i class="fas fa-rss"></i> </a></div></aside><div id="main-wrapper" class="d-flex justify-content-center"><div class="container d-flex flex-column px-xxl-5"><header id="topbar-wrapper" class="flex-shrink-0" aria-label="Top Bar"><div id="topbar" class="d-flex align-items-center justify-content-between px-lg-3 h-100" ><nav id="breadcrumb" aria-label="Breadcrumb"> <span> <a href="/">Home</a> </span> <span>Flare-On 11 Write-Up Part 1</span></nav><button type="button" id="sidebar-trigger" class="btn btn-link" aria-label="Sidebar"> <i class="fas fa-bars fa-fw"></i> </button><div id="topbar-title"> Post</div><button type="button" id="search-trigger" class="btn btn-link" aria-label="Search"> <i class="fas fa-search fa-fw"></i> </button> <search id="search" class="align-items-center ms-3 ms-lg-0"> <i class="fas fa-search fa-fw"></i> <input class="form-control" id="search-input" type="search" aria-label="search" autocomplete="off" placeholder="Search..." > </search> <button type="button" class="btn btn-link text-decoration-none" id="search-cancel">Cancel</button></div></header><div class="row flex-grow-1"><main aria-label="Main Content" class="col-12 col-lg-11 col-xl-9 px-md-4"><article class="px-1" data-toc="true"><header><h1 data-toc-skip>Flare-On 11 Write-Up Part 1</h1><div class="post-meta text-muted"> <span> Posted <time data-ts="1732378020" data-df="ll" data-bs-toggle="tooltip" data-bs-placement="bottom" > Nov 23, 2024 </time> </span> <span> Updated <time data-ts="1733177705" data-df="ll" data-bs-toggle="tooltip" data-bs-placement="bottom" > Dec 2, 2024 </time> </span><div class="d-flex justify-content-between"> <span> By <em> <a href="https://github.com/vik0t0r">Victor de Pedraza Ajenjo</a> </em> </span><div> <span class="readtime" data-bs-toggle="tooltip" data-bs-placement="bottom" title="1976 words" > <em>10 min</em> read</span></div></div></div></header><div id="toc-bar" class="d-flex align-items-center justify-content-between invisible"> <span class="label text-truncate">Flare-On 11 Write-Up Part 1</span> <button type="button" class="toc-trigger btn me-1"> <i class="fa-solid fa-list-ul fa-fw"></i> </button></div><button id="toc-solo-trigger" type="button" class="toc-trigger btn btn-outline-secondary btn-sm"> <span class="label ps-2 pe-1">Contents</span> <i class="fa-solid fa-angle-right fa-fw"></i> </button> <dialog id="toc-popup" class="p-0"><div class="header d-flex flex-row align-items-center justify-content-between"><div class="label text-truncate py-2 ms-4">Flare-On 11 Write-Up Part 1</div><button id="toc-popup-close" type="button" class="btn mx-1 my-1 opacity-75"> <i class="fas fa-close"></i> </button></div><div id="toc-popup-content" class="px-4 py-3 pb-4"></div></dialog><div class="content"><p>Over the past few weeks, I took part in the eleventh <a href="http://flare-on.com">FLARE-ON</a> Reverse Engineering Capture-the-Flag (CTF) competition.</p><p>I managed to solve 6 out of the 10 challenges in this year’s Flare-On, picking up some great experience and learning more about Reverse Engineering along the way. The competition was tough but fun, and I’m already looking forward to next year’s event.</p><p>In this post, I’ll share my write-ups for the challenges I solved. One thing I love about this CTF is its linear format, which helps you stay focused by letting you work on one challenge at a time.</p><p>You can also find supplementary resources, including the scripts I used throughout the CTF, in <a href="https://github.com/vik0t0r/flare-on-11">this repository</a>.</p><h2 id="challenge-1---frog"><span class="me-2">Challenge 1 - frog</span><a href="#challenge-1---frog" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2><blockquote><p>Your mission is get the frog to the “11” statue, and the game will display the flag. Enter the flag on this page to advance to the next stage.</p></blockquote><p>This was the first challenge in the Flare-On 11 competition, and it served as a warm-up. It introduced a simple problem that could be solved by analyzing Python code. Let’s break it down step by step.</p><p>We were provided with a small game written in Python using the PyGame library, along with its source code. The goal was to reverse engineer the program and extract the hidden flag.</p><h4 id="step-1-understanding-the-code"><span class="me-2">Step 1: Understanding the Code</span><a href="#step-1-understanding-the-code" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4><p>Upon opening the main game file, I skimmed through the source code and noticed a function named <code class="language-plaintext highlighter-rouge">GenerateFlagText</code>. This function appeared to generate the flag using some form of encoding and two coordinates passed as arguments. Here’s the function:</p><div class="language-python highlighter-rouge"><div class="code-header"> <span data-label-text="Python"><i class="fas fa-code fa-fw small"></i></span> <button aria-label="copy" data-title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre><td class="rouge-code"><pre><span class="k">def</span> <span class="nf">GenerateFlagText</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="n">key</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="o">*</span><span class="mi">20</span>
+    <span class="n">encoded</span> <span class="o">=</span> <span class="sh">"</span><span class="se">\xa5\xb7\xbe\xb1\xbd\xbf\xb7\x8d\xa6\xbd\x8d\xe3\xe3\x92\xb4\xbe\xb3\xa0\xb7\xff\xbd\xbc\xfc\xb1\xbd\xbf</span><span class="sh">"</span>
+    <span class="k">return</span> <span class="sh">''</span><span class="p">.</span><span class="nf">join</span><span class="p">([</span><span class="nf">chr</span><span class="p">(</span><span class="nf">ord</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">^</span> <span class="n">key</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">encoded</span><span class="p">])</span>
+</pre></table></code></div></div><h4 id="step-2-identifying-where-its-used"><span class="me-2">Step 2: Identifying Where It’s Used</span><a href="#step-2-identifying-where-its-used" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4><p>I noticed that this function is called in the game’s main loop when the player coordinates matches the <code class="language-plaintext highlighter-rouge">victory_tile</code> coordinates:</p><div class="language-python highlighter-rouge"><div class="code-header"> <span data-label-text="Python"><i class="fas fa-code fa-fw small"></i></span> <button aria-label="copy" data-title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+</pre><td class="rouge-code"><pre><span class="k">if</span> <span class="n">player</span><span class="p">.</span><span class="n">x</span> <span class="o">==</span> <span class="n">victory_tile</span><span class="p">.</span><span class="n">x</span> <span class="ow">and</span> <span class="n">player</span><span class="p">.</span><span class="n">y</span> <span class="o">==</span> <span class="n">victory_tile</span><span class="p">.</span><span class="n">y</span><span class="p">:</span>
+    <span class="n">victory_mode</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="n">flag_text</span> <span class="o">=</span> <span class="nc">GenerateFlagText</span><span class="p">(</span><span class="n">player</span><span class="p">.</span><span class="n">x</span><span class="p">,</span> <span class="n">player</span><span class="p">.</span><span class="n">y</span><span class="p">)</span>
+    <span class="n">flag_text_surface</span> <span class="o">=</span> <span class="n">flagfont</span><span class="p">.</span><span class="nf">render</span><span class="p">(</span><span class="n">flag_text</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="n">pygame</span><span class="p">.</span><span class="nc">Color</span><span class="p">(</span><span class="sh">'</span><span class="s">black</span><span class="sh">'</span><span class="p">))</span>
+    <span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="s">%s</span><span class="sh">"</span> <span class="o">%</span> <span class="n">flag_text</span><span class="p">)</span>
+
+</pre></table></code></div></div><p>The victory_tile coordinates are defined at the beginning of the file:</p><div class="language-python highlighter-rouge"><div class="code-header"> <span data-label-text="Python"><i class="fas fa-code fa-fw small"></i></span> <button aria-label="copy" data-title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre><td class="rouge-code"><pre><span class="n">victory_tile</span> <span class="o">=</span> <span class="n">pygame</span><span class="p">.</span><span class="nc">Vector2</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+</pre></table></code></div></div><h4 id="step-3--extracting-the-flag"><span class="me-2">Step 3: Extracting the Flag</span><a href="#step-3--extracting-the-flag" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4><p>Now that we know that the tile coordinates are (10, 10), we can calculate the key and decode the flag without even running the game.</p><p>I opened a Python interpreter and executed the <code class="language-plaintext highlighter-rouge">GenerateFlagText</code> function directly, obtaining the first flag:</p><div class="language-bash highlighter-rouge"><div class="code-header"> <span data-label-text="Shell"><i class="fas fa-code fa-fw small"></i></span> <button aria-label="copy" data-title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+</pre><td class="rouge-code"><pre><span class="nv">$ </span>python3
+<span class="o">&gt;&gt;&gt;</span> def GenerateFlagText<span class="o">(</span>x, y<span class="o">)</span>:
+...     key <span class="o">=</span> x + y<span class="k">*</span>20
+...     encoded <span class="o">=</span> <span class="s2">"</span><span class="se">\x</span><span class="s2">a5</span><span class="se">\x</span><span class="s2">b7</span><span class="se">\x</span><span class="s2">be</span><span class="se">\x</span><span class="s2">b1</span><span class="se">\x</span><span class="s2">bd</span><span class="se">\x</span><span class="s2">bf</span><span class="se">\x</span><span class="s2">b7</span><span class="se">\x</span><span class="s2">8d</span><span class="se">\x</span><span class="s2">a6</span><span class="se">\x</span><span class="s2">bd</span><span class="se">\x</span><span class="s2">8d</span><span class="se">\x</span><span class="s2">e3</span><span class="se">\x</span><span class="s2">e3</span><span class="se">\x</span><span class="s2">92</span><span class="se">\x</span><span class="s2">b4</span><span class="se">\x</span><span class="s2">be</span><span class="se">\x</span><span class="s2">b3</span><span class="se">\x</span><span class="s2">a0</span><span class="se">\x</span><span class="s2">b7</span><span class="se">\x</span><span class="s2">ff</span><span class="se">\x</span><span class="s2">bd</span><span class="se">\x</span><span class="s2">bc</span><span class="se">\x</span><span class="s2">fc</span><span class="se">\x</span><span class="s2">b1</span><span class="se">\x</span><span class="s2">bd</span><span class="se">\x</span><span class="s2">bf"</span>
+...     <span class="k">return</span> <span class="s1">''</span>.join<span class="o">([</span>chr<span class="o">(</span>ord<span class="o">(</span>c<span class="o">)</span> ^ key<span class="o">)</span> <span class="k">for </span>c <span class="k">in </span>encoded]<span class="o">)</span>
+...
+<span class="o">&gt;&gt;&gt;</span> GenerateFlagText<span class="o">(</span>10, 10<span class="o">)</span>
+<span class="s1">'welcome_to_11@flare-on.com'</span>
+</pre></table></code></div></div><h2 id="challenge-2---checksum"><span class="me-2">Challenge 2 - checksum</span><a href="#challenge-2---checksum" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2><blockquote><p>We recently came across a silly executable that appears benign. It just asks us to do some math… From the strings found in the sample, we suspect there are more to the sample than what we are seeing. Please investigate and let us know what you find!</p></blockquote><p>Now the real challenges begin! For this task, we were given a single file to analyze: <code class="language-plaintext highlighter-rouge">checksum.exe</code>.</p><h4 id="step-1-initial-analysis"><span class="me-2">Step 1: Initial analysis</span><a href="#step-1-initial-analysis" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4><p>As an initial step, I ran the <code class="language-plaintext highlighter-rouge">strings</code> command on the binary, which revealed a number of references to GoLang. Loading the binary into Ghidra confirmed it was a Go binary, and the tool identified it as such.</p><p>Running the executable on a Windows machine revealed a CLI that required solving arithmetic problems. After several calculations, the program requested a “Checksum” that we needed to determine:</p><div class="language-bash highlighter-rouge"><div class="code-header"> <span data-label-text="Shell"><i class="fas fa-code fa-fw small"></i></span> <button aria-label="copy" data-title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+</pre><td class="rouge-code"><pre>C:<span class="se">\U</span>sers<span class="se">\p</span>umuki<span class="se">\D</span>esktop+&gt;checksum.exe
+Check <span class="nb">sum</span>: 8322 + 3603 <span class="o">=</span> 11925
+Good math!!!
+<span class="nt">------------------------------</span>
+Check <span class="nb">sum</span>: 3990 + 1309 <span class="o">=</span> 5299
+Good math!!!
+<span class="nt">------------------------------</span>
+Check <span class="nb">sum</span>: 8346 + 4096 <span class="o">=</span> 12442
+Good math!!!
+<span class="nt">------------------------------</span>
+Check <span class="nb">sum</span>: 2683 + 5878 <span class="o">=</span> 8561
+Good math!!!
+<span class="nt">------------------------------</span>
+Check <span class="nb">sum</span>: 6050 + 3440 <span class="o">=</span> 9490
+Good math!!!
+<span class="nt">------------------------------</span>
+Check <span class="nb">sum</span>: 8028 + 7421 <span class="o">=</span> 15449
+Good math!!!
+<span class="nt">------------------------------</span>
+Checksum: hello
+Not a valid checksum...
+
+FLARE 24/11/2024  0:09:05,42
+C:<span class="se">\U</span>sers<span class="se">\p</span>umuki<span class="se">\D</span>esktop+&gt;
+</pre></table></code></div></div><h4 id="step-2-static-analysis"><span class="me-2">Step 2: Static analysis</span><a href="#step-2-static-analysis" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4><p>After loading the binary into Ghidra, I began by inspecting the main.main symbol, which serves as the program’s entry point. This function was quite large and seemed to encompass most of the program’s logic.</p><p>I identified function calls and strings that matched the program’s output, the “Good math!!!” message from earlier was clearly visible in the decompiled code:</p><p><a href="https://vik0t0r.github.io/assets/img/flareon11/good_math.png" class="popup img-link shimmer"><img src="https://vik0t0r.github.io/assets/img/flareon11/good_math.png" alt="img-description" width="800" loading="lazy"></a></p><p>After a bit of effort I recognised the while loop that asked for the Check Sums. This loop iterated between 3 and 8 times:</p><p><a href="https://vik0t0r.github.io/assets/img/flareon11/check_sum_while.png" class="popup img-link shimmer"><img src="https://vik0t0r.github.io/assets/img/flareon11/check_sum_while.png" alt="img-description" width="800" loading="lazy"></a></p><p>At this point, I realized the “Check sum” inputs were unrelated to the final checksum verification. Instead, the provided checksum was validated by a function, which then generated a ChaCha20 key to decrypt the file <code class="language-plaintext highlighter-rouge">REAL_FLAREON_FLAG.JPG</code>.</p><h4 id="step-3-checksum-algorithm"><span class="me-2">Step 3: Checksum algorithm</span><a href="#step-3-checksum-algorithm" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4><p>The validation function (<code class="language-plaintext highlighter-rouge">main.a</code>) stood out. It took the provided checksum as input and returned a boolean, printing an error message if the checksum was invalid:</p><p><a href="https://vik0t0r.github.io/assets/img/flareon11/main_a_call.png" class="popup img-link shimmer"><img src="https://vik0t0r.github.io/assets/img/flareon11/main_a_call.png" alt="img-description" width="800" loading="lazy"></a></p><p>This function gave me a little headeache because of how it was structured. Inside <code class="language-plaintext highlighter-rouge">main.a</code>, the checksum validation logic worked as follows:</p><ol><li>Xor the provided string with the <code class="language-plaintext highlighter-rouge">FlareOn2024</code> string<li>When all bytes have been xored <code class="language-plaintext highlighter-rouge">if (len &lt;= i)</code>:<ol><li>Encode to base64<li>Check that the length is equal to 88<li>Check that the base64 encoded data is equal to <code class="language-plaintext highlighter-rouge">cQoFRQErX1YAVw1zVQdFUSxfAQNRBXUNAxBSe15QCVRVJ1pQEwd/WFBUAlElCFBFUnlaB1ULByRdBEFdfVtWVA==</code></ol></ol><p>With this knowledge, I wrote a script to reverse these steps and calculate the required checksum.</p><p><a href="https://vik0t0r.github.io/assets/img/flareon11/main_a.png" class="popup img-link shimmer"><img src="https://vik0t0r.github.io/assets/img/flareon11/main_a.png" alt="img-description" width="800" loading="lazy"></a></p><h4 id="step-4-solving"><span class="me-2">Step 4: Solving</span><a href="#step-4-solving" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4><p>Here’s the Python script I wrote to reverse the checksum algorithm:</p><div class="language-python highlighter-rouge"><div class="code-header"> <span data-label-text="Python"><i class="fas fa-code fa-fw small"></i></span> <button aria-label="copy" data-title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+</pre><td class="rouge-code"><pre><span class="kn">import</span> <span class="n">base64</span>
+<span class="kn">import</span> <span class="n">itertools</span>
+
+<span class="k">def</span> <span class="nf">xor_bytes</span><span class="p">(</span><span class="n">byte_string</span><span class="p">,</span> <span class="n">xor_key</span><span class="p">):</span>
+    <span class="c1"># Use itertools.cycle to repeat the xor_key as needed
+</span>    <span class="n">repeated_key</span> <span class="o">=</span> <span class="n">itertools</span><span class="p">.</span><span class="nf">cycle</span><span class="p">(</span><span class="n">xor_key</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="nf">list</span><span class="p">((</span><span class="n">a</span> <span class="o">^</span><span class="n">b</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nf">zip</span><span class="p">(</span><span class="n">byte_string</span><span class="p">,</span> <span class="n">repeated_key</span><span class="p">))</span>
+    <span class="k">return</span> <span class="nf">bytes</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="c1"># Hardcoded Base64 string
+</span><span class="n">base64_string</span> <span class="o">=</span> <span class="sh">"</span><span class="s">cQoFRQErX1YAVw1zVQdFUSxfAQNRBXUNAxBSe15QCVRVJ1pQEwd/WFBUAlElCFBFUnlaB1ULByRdBEFdfVtWVA==</span><span class="sh">"</span>
+
+<span class="c1"># Decode the Base64 string to get the original bytes
+</span><span class="n">decoded_bytes</span> <span class="o">=</span> <span class="n">base64</span><span class="p">.</span><span class="nf">b64decode</span><span class="p">(</span><span class="n">base64_string</span><span class="p">)</span>
+<span class="nf">print</span><span class="p">(</span><span class="nf">len</span><span class="p">(</span><span class="n">decoded_bytes</span><span class="p">))</span>
+
+<span class="c1"># Another byte string to XOR with
+</span><span class="n">xor_key</span> <span class="o">=</span> <span class="sa">b</span><span class="sh">"</span><span class="s">FlareOn2024</span><span class="sh">"</span>
+
+<span class="c1"># Perform XOR
+</span><span class="n">xor_result</span> <span class="o">=</span> <span class="nf">xor_bytes</span><span class="p">(</span><span class="n">decoded_bytes</span><span class="p">,</span> <span class="n">xor_key</span><span class="p">)</span>
+
+<span class="c1"># Print the XOR result
+</span><span class="nf">print</span><span class="p">(</span><span class="n">xor_result</span><span class="p">)</span>
+</pre></table></code></div></div><p>After running the script, I provided the checksum to the program:</p><div class="language-bash highlighter-rouge"><div class="code-header"> <span data-label-text="Shell"><i class="fas fa-code fa-fw small"></i></span> <button aria-label="copy" data-title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+</pre><td class="rouge-code"><pre>C:<span class="se">\U</span>sers<span class="se">\p</span>umuki<span class="se">\D</span>esktop+&gt;checksum.exe
+Check <span class="nb">sum</span>: 8322 + 3603 <span class="o">=</span> 11925
+Good math!!!
+<span class="nt">------------------------------</span>
+Check <span class="nb">sum</span>: 3990 + 1309 <span class="o">=</span> 5299
+Good math!!!
+<span class="nt">------------------------------</span>
+Check <span class="nb">sum</span>: 8346 + 4096 <span class="o">=</span> 12442
+Good math!!!
+<span class="nt">------------------------------</span>
+Checksum: 7fd7dd1d0e959f74c133c13abb740b9faa61ab06bd0ecd177645e93b1e3825dd
+Noice!!
+</pre></table></code></div></div><p>The program successfully decrypted the file <code class="language-plaintext highlighter-rouge">REAL_FLAREON_FLAG.JPG</code>, which was saved in <code class="language-plaintext highlighter-rouge">%LOCALAPPDATA%</code>:</p><p><a href="https://vik0t0r.github.io/assets/img/flareon11/REAL_FLAREON_FLAG.JPG" class="popup img-link shimmer"><img src="https://vik0t0r.github.io/assets/img/flareon11/REAL_FLAREON_FLAG.JPG" alt="img-description" width="800" loading="lazy"></a></p><h2 id="challenge-3---aray"><span class="me-2">Challenge 3 - aray</span><a href="#challenge-3---aray" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2><blockquote><p>And now for something completely different. I’m pretty sure you know how to write Yara rules, but can you reverse them?</p></blockquote><p>In this challenge, we were given a YARA rule to reverse engineer. <a href="https://github.com/VirusTotal/yara">YARA</a> is a powerful pattern-matching tool commonly used to create malware signatures. Our goal was to find the file that satisfies all the conditions in the provided YARA rule.</p><div class="language-bash highlighter-rouge"><div class="code-header"> <span data-label-text="Shell"><i class="fas fa-code fa-fw small"></i></span> <button aria-label="copy" data-title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+</pre><td class="rouge-code"><pre><span class="nb">cat </span>aray.yara | <span class="nb">head</span> <span class="nt">-c</span> 300
+rule aray
+<span class="o">{</span>
+    meta:
+        description <span class="o">=</span> <span class="s2">"Matches on b7dc94ca98aa58dabb5404541c812db2"</span>
+    condition:
+        filesize <span class="o">==</span> 85 and hash.md5<span class="o">(</span>0, filesize<span class="o">)</span> <span class="o">==</span> <span class="s2">"b7dc94ca98aa58dabb5404541c812db2"</span> and filesize ^ uint8<span class="o">(</span>11<span class="o">)</span> <span class="o">!=</span> 107 and uint8<span class="o">(</span>55<span class="o">)</span> &amp; 128 <span class="o">==</span> 0 and uint8<span class="o">(</span>58<span class="o">)</span> + 25 <span class="o">==</span> 122 and uint8<span class="o">(</span>
+</pre></table></code></div></div><h4 id="step-1-initial-analysis-1"><span class="me-2">Step 1: Initial Analysis</span><a href="#step-1-initial-analysis-1" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4><p>This YARA rule contained several conditions, all of which had to match. Two initial conditions defined the file size and MD5 hash:</p><ul><li><code class="language-plaintext highlighter-rouge">filesize == 85</code><li><code class="language-plaintext highlighter-rouge">hash.md5(0, filesize) == "b7dc94ca98aa58dabb5404541c812db2"</code></ul><p>Next, it included numerous byte-level conditions like:</p><ul><li>Exact matches: <code class="language-plaintext highlighter-rouge">uint8(84) + 3 == 128</code><li>Comparisons: <code class="language-plaintext highlighter-rouge">uint8(20) &lt; 135</code></ul><p>To solve this challenge, I set the exact-match bytes first and then used brute-forcing to determine the remaining bytes.</p><h4 id="step-2-parsing-the-rule"><span class="me-2">Step 2: Parsing the Rule</span><a href="#step-2-parsing-the-rule" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4><p>I wrote a simple script to identify and parse the rules which produced exact matches:</p><div class="language-python highlighter-rouge"><div class="code-header"> <span data-label-text="Python"><i class="fas fa-code fa-fw small"></i></span> <button aria-label="copy" data-title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+</pre><td class="rouge-code"><pre><span class="n">rule</span> <span class="o">=</span> <span class="sh">'</span><span class="s">filesize == 85 and hash.md5(0, filesize) == </span><span class="sh">"</span><span class="s">b7dc94c</span><span class="sh">'</span> <span class="bp">...</span>
+
+<span class="n">ruleList</span> <span class="o">=</span> <span class="n">rule</span><span class="p">.</span><span class="nf">split</span><span class="p">(</span><span class="sh">"</span><span class="s">and</span><span class="sh">"</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">ruleList</span><span class="p">:</span>
+    <span class="k">if</span> <span class="sh">"</span><span class="s">==</span><span class="sh">"</span> <span class="ow">in</span> <span class="n">r</span> <span class="ow">and</span> <span class="ow">not</span> <span class="sh">"</span><span class="s">&amp;</span><span class="sh">"</span> <span class="ow">in</span> <span class="n">r</span><span class="p">:</span>
+        <span class="nf">print</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+</pre></table></code></div></div><p>This script helped categorize the conditions into the following groups:</p><ul><li>Hash Conditions:<ul><li><code class="language-plaintext highlighter-rouge">hash.sha256(pos, 2) == val</code> defines 2 bytes and appears 4 times<li><code class="language-plaintext highlighter-rouge">hash.md5(pos, 2) == val</code> defines 2 bytes and appears 2 times<li><code class="language-plaintext highlighter-rouge">hash.crc32(pos, 2) == val</code> defines 2 bytes and appears 4 times</ul><li>Byte Constraints:<ul><li><code class="language-plaintext highlighter-rouge">uint8(pos) + val1 == val2</code> defines 1 bytes and appears 13 times<li><code class="language-plaintext highlighter-rouge">uint32(pos) ^ val1 == val2</code> defines 4 bytes and appears 13 times</ul></ul><h4 id="step-3-determining-byte-values"><span class="me-2">Step 3: Determining Byte Values</span><a href="#step-3-determining-byte-values" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4><p><strong>Hash Constraints</strong></p><p>For hash-based conditions, I used online tools, like <a href="https://md5hashing.net/hash/md5">this one</a> to find the corresponding byte values:</p><div class="language-bash highlighter-rouge"><div class="code-header"> <span data-label-text="Shell"><i class="fas fa-code fa-fw small"></i></span> <button aria-label="copy" data-title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+</pre><td class="rouge-code"><pre> hash.md5<span class="o">(</span>0, 2<span class="o">)</span> <span class="o">==</span> <span class="s2">"89484b14b36a8d5329426a3d944d2983"</span> -&gt; <span class="s2">"ru"</span>
+ hash.md5<span class="o">(</span>76, 2<span class="o">)</span> <span class="o">==</span> <span class="s2">"f98ed07a4d5f50f7de1410d905f1477f"</span>  -&gt; <span class="s2">"io"</span>
+ hash.md5<span class="o">(</span>50, 2<span class="o">)</span> <span class="o">==</span> <span class="s2">"657dae0913ee12be6fb2a6f687aae1c7"</span>  -&gt; <span class="s2">"3A"</span>
+ hash.md5<span class="o">(</span>32, 2<span class="o">)</span> <span class="o">==</span> <span class="s2">"738a656e8e8ec272ca17cd51e12f558b"</span>  -&gt; <span class="s2">"ul"</span>
+
+ hash.sha256<span class="o">(</span>14, 2<span class="o">)</span> <span class="o">==</span> <span class="s2">"403d5f23d149670348b147a15eeb7010914701a7e99aad2e43f90cfa0325c76f"</span>  -&gt; <span class="s2">" s"</span>
+ hash.sha256<span class="o">(</span>56, 2<span class="o">)</span> <span class="o">==</span> <span class="s2">"593f2d04aab251f60c9e4b8bbc1e05a34e920980ec08351a18459b2bc7dbf2f6"</span>  -&gt; <span class="s2">"fl"</span>
+</pre></table></code></div></div><p><strong>CRC32 Constraints</strong></p><p>For the crc32 conditions I wrote the following script to find the original bytes:</p><div class="language-python highlighter-rouge"><div class="code-header"> <span data-label-text="Python"><i class="fas fa-code fa-fw small"></i></span> <button aria-label="copy" data-title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+</pre><td class="rouge-code"><pre><span class="kn">import</span> <span class="n">zlib</span>
+<span class="kn">import</span> <span class="n">itertools</span>
+<span class="kn">import</span> <span class="n">string</span>
+
+
+<span class="k">def</span> <span class="nf">generate_crc32_for_2char_strings</span><span class="p">():</span>
+    <span class="c1"># Generate all possible 2-character strings (from printable ASCII characters)
+</span>    <span class="n">chars</span> <span class="o">=</span> <span class="n">string</span><span class="p">.</span><span class="n">printable</span>  <span class="c1"># Printable ASCII characters
+</span>    <span class="n">combinations</span> <span class="o">=</span> <span class="n">itertools</span><span class="p">.</span><span class="nf">product</span><span class="p">(</span><span class="n">chars</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+    <span class="c1"># Iterate through each combination and compute its CRC32
+</span>    <span class="k">for</span> <span class="n">combination</span> <span class="ow">in</span> <span class="n">combinations</span><span class="p">:</span>
+        <span class="n">input_string</span> <span class="o">=</span> <span class="sh">''</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">combination</span><span class="p">)</span>
+        <span class="n">crc_value</span> <span class="o">=</span> <span class="n">zlib</span><span class="p">.</span><span class="nf">crc32</span><span class="p">(</span><span class="n">input_string</span><span class="p">.</span><span class="nf">encode</span><span class="p">())</span>
+
+        <span class="nf">yield </span><span class="p">(</span><span class="n">input_string</span><span class="p">,</span> <span class="n">crc_value</span><span class="p">)</span>
+
+
+<span class="c1"># Run the function
+</span><span class="nf">generate_crc32_for_2char_strings</span><span class="p">()</span>
+
+<span class="k">for</span> <span class="nb">input</span><span class="p">,</span> <span class="n">crc32</span> <span class="ow">in</span> <span class="nf">generate_crc32_for_2char_strings</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">crc32</span> <span class="o">==</span> <span class="mh">0x61089c5c</span><span class="p">:</span>
+        <span class="nf">print</span><span class="p">(</span><span class="nf">hex</span><span class="p">(</span><span class="n">crc32</span><span class="p">),</span> <span class="nb">input</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">crc32</span> <span class="o">==</span> <span class="mh">0x5888fc1b</span><span class="p">:</span>
+        <span class="nf">print</span><span class="p">(</span><span class="nf">hex</span><span class="p">(</span><span class="n">crc32</span><span class="p">),</span> <span class="nb">input</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">crc32</span> <span class="o">==</span> <span class="mh">0x66715919</span><span class="p">:</span>
+        <span class="nf">print</span><span class="p">(</span><span class="nf">hex</span><span class="p">(</span><span class="n">crc32</span><span class="p">),</span> <span class="nb">input</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">crc32</span> <span class="o">==</span> <span class="mh">0x7cab8d64</span><span class="p">:</span>
+        <span class="nf">print</span><span class="p">(</span><span class="nf">hex</span><span class="p">(</span><span class="n">crc32</span><span class="p">),</span> <span class="nb">input</span><span class="p">)</span>
+</pre></table></code></div></div><div class="language-bash highlighter-rouge"><div class="code-header"> <span data-label-text="Shell"><i class="fas fa-code fa-fw small"></i></span> <button aria-label="copy" data-title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre><td class="rouge-code"><pre> hash.crc32<span class="o">(</span>8, 2<span class="o">)</span> <span class="o">==</span> 0x61089c5c  -&gt; <span class="s2">"re"</span>
+ hash.crc32<span class="o">(</span>34, 2<span class="o">)</span> <span class="o">==</span> 0x5888fc1b  -&gt; <span class="s2">"eA"</span>
+ hash.crc32<span class="o">(</span>63, 2<span class="o">)</span> <span class="o">==</span> 0x66715919  -&gt; <span class="s2">"n."</span>
+ hash.crc32<span class="o">(</span>78, 2<span class="o">)</span> <span class="o">==</span> 0x7cab8d64  -&gt; <span class="s2">"n:"</span>
+</pre></table></code></div></div><p><strong>Byte Level Constraints</strong></p><p>For the uint8 and uint32 constraints, I solved them using a calculator. Examples:</p><div class="language-bash highlighter-rouge"><div class="code-header"> <span data-label-text="Shell"><i class="fas fa-code fa-fw small"></i></span> <button aria-label="copy" data-title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+</pre><td class="rouge-code"><pre> uint8<span class="o">(</span>58<span class="o">)</span> + 25 <span class="o">==</span> 122 -&gt; <span class="s2">"a"</span>
+ uint32<span class="o">(</span>52<span class="o">)</span> ^ 425706662 <span class="o">==</span> 1495724241 -&gt; <span class="s2">"w4y@"</span> 
+ uint32<span class="o">(</span>17<span class="o">)</span> - 323157430 <span class="o">==</span> 1412131772  -&gt; <span class="s2">"ring"</span>
+ uint8<span class="o">(</span>36<span class="o">)</span> + 4 <span class="o">==</span> 72 -&gt; <span class="s2">"D"</span>
+ uint8<span class="o">(</span>27<span class="o">)</span> ^ 21 <span class="o">==</span> 40 -&gt; <span class="s2">"="</span>
+ ...
+</pre></table></code></div></div><p><strong>Building the File</strong></p><p>Once I identified these values, I populated them into a byte array. Here’s a snippet of the script I used to assemble the file. <a href="https://github.com/vik0t0r/flare-on-11/blob/main/3_aray/assembleFinalFile.py">Complete script</a>:</p><div class="language-python highlighter-rouge"><div class="code-header"> <span data-label-text="Python"><i class="fas fa-code fa-fw small"></i></span> <button aria-label="copy" data-title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+</pre><td class="rouge-code"><pre><span class="k">with</span> <span class="nf">open</span><span class="p">(</span><span class="sh">"</span><span class="s">out.txt</span><span class="sh">"</span><span class="p">,</span><span class="sh">"</span><span class="s">wb</span><span class="sh">"</span><span class="p">)</span> <span class="k">as</span> <span class="n">outputFD</span><span class="p">:</span>
+    <span class="n">outputBuffer</span> <span class="o">=</span> <span class="nf">bytearray</span><span class="p">(</span><span class="sa">b</span><span class="sh">""</span><span class="p">)</span>
+    <span class="n">outputBuffer</span> <span class="o">+=</span> <span class="nf">bytearray</span><span class="p">(</span><span class="sa">b</span><span class="sh">"</span><span class="s">_</span><span class="sh">"</span><span class="o">*</span><span class="mi">85</span><span class="p">)</span>
+
+    <span class="c1"># hash.md5 checks define:
+</span>    <span class="n">outputBuffer</span><span class="p">[</span><span class="mi">50</span><span class="p">]</span> <span class="o">=</span> <span class="nf">ord</span><span class="p">(</span><span class="sh">"</span><span class="s">3</span><span class="sh">"</span><span class="p">)</span>
+    <span class="n">outputBuffer</span><span class="p">[</span><span class="mi">51</span><span class="p">]</span> <span class="o">=</span> <span class="nf">ord</span><span class="p">(</span><span class="sh">"</span><span class="s">A</span><span class="sh">"</span><span class="p">)</span>
+
+    <span class="bp">...</span>
+
+    <span class="c1"># bitwise on basic operations
+</span>    <span class="n">outputBuffer</span><span class="p">[</span><span class="mi">52</span><span class="p">]</span> <span class="o">=</span> <span class="mi">119</span>
+    <span class="n">outputBuffer</span><span class="p">[</span><span class="mi">53</span><span class="p">]</span> <span class="o">=</span> <span class="mi">52</span>
+    <span class="n">outputBuffer</span><span class="p">[</span><span class="mi">54</span><span class="p">]</span> <span class="o">=</span> <span class="mi">121</span>
+    <span class="n">outputBuffer</span><span class="p">[</span><span class="mi">55</span><span class="p">]</span> <span class="o">=</span> <span class="mi">64</span>
+
+    <span class="n">outputBuffer</span><span class="p">[</span><span class="mi">17</span><span class="p">]</span> <span class="o">=</span> <span class="mi">114</span>
+    <span class="n">outputBuffer</span><span class="p">[</span><span class="mi">18</span><span class="p">]</span> <span class="o">=</span> <span class="mi">105</span>
+    <span class="n">outputBuffer</span><span class="p">[</span><span class="mi">19</span><span class="p">]</span> <span class="o">=</span> <span class="mi">110</span>
+    <span class="n">outputBuffer</span><span class="p">[</span><span class="mi">20</span><span class="p">]</span> <span class="o">=</span> <span class="mi">103</span>
+
+    <span class="bp">...</span>
+
+    <span class="c1"># sha256 rules
+</span>    <span class="n">outputBuffer</span><span class="p">[</span><span class="mi">14</span><span class="p">]</span> <span class="o">=</span> <span class="nf">ord</span><span class="p">(</span><span class="sh">"</span><span class="s"> </span><span class="sh">"</span><span class="p">)</span>
+    <span class="n">outputBuffer</span><span class="p">[</span><span class="mi">15</span><span class="p">]</span> <span class="o">=</span> <span class="nf">ord</span><span class="p">(</span><span class="sh">"</span><span class="s">s</span><span class="sh">"</span><span class="p">)</span>
+
+    <span class="p">..</span>
+
+    <span class="c1"># write solution
+</span>
+    <span class="k">if</span> <span class="nf">len</span><span class="p">(</span><span class="n">outputBuffer</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">85</span><span class="p">:</span>
+        <span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="s">ERROR, INCORRECT OUTPUT LENGTH</span><span class="sh">"</span><span class="p">)</span>
+        <span class="nf">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">outputFD</span><span class="p">.</span><span class="nf">write</span><span class="p">(</span><span class="n">outputBuffer</span><span class="p">)</span>
+</pre></table></code></div></div><p>This gives us the following output, we have found all characters: <code class="language-plaintext highlighter-rouge">rule flareon { strings: $f = "1RuleADayK33p$Malw4r3Aw4y@flare-on.com" condition: $f }</code></p><h4 id="extra-brute-forcing-with-hashcat"><span class="me-2">Extra: Brute-forcing with Hashcat</span><a href="#extra-brute-forcing-with-hashcat" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4><p>If we hadn’t found all the characters, I could have used Hashcat to brute-force the remaining ones.</p><p>In the following example, some characters have been replaced with ?1 to bruteforce them. This allows me to test combinations for specific unknown characters efficiently. With my current setup, I can bruteforce up to 6 characters almost instantly. Here’s a breakdown of the bruteforce speeds:</p><ul><li>6 characters: ~3 minutes<li>7 characters: ~4 hours<li>8 characters: ~18 days</ul><div class="language-bash highlighter-rouge"><div class="code-header"> <span data-label-text="Shell"><i class="fas fa-code fa-fw small"></i></span> <button aria-label="copy" data-title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre><td class="rouge-code"><pre><span class="nb">echo</span> <span class="s2">"b7dc94ca98aa58dabb5404541c812db2"</span> <span class="o">&gt;</span> hash.txt
+hashcat <span class="nt">-m</span> 0 <span class="nt">-a</span> 3 hash.txt <span class="s1">'rule flareon { strings: $f = "1RuleADayK33p$Malw4r3Aw4y@flare-on.?1om" cond?1?1ion: $f ?1'</span> <span class="nt">-1</span> ?l?u?d?s
+</pre></table></code></div></div><p>This approach founds the mathing string:</p><div class="language-bash highlighter-rouge"><div class="code-header"> <span data-label-text="Shell"><i class="fas fa-code fa-fw small"></i></span> <button aria-label="copy" data-title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre><td class="rouge-code"><pre>b7dc94ca98aa58dabb5404541c812db2:<span class="nv">$HEX</span><span class="o">[</span>72756c6520666c6172656f6e207b20737472696e67733a202466203d20223152756c65414461794b333370244d616c773472334177347940666c6172652d6f6e2e636f6d2220636f6e646974696f6e3a202466207d]
+</pre></table></code></div></div><p>Decoding the result:</p><div class="language-bash highlighter-rouge"><div class="code-header"> <span data-label-text="Shell"><i class="fas fa-code fa-fw small"></i></span> <button aria-label="copy" data-title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre><td class="rouge-code"><pre><span class="nb">echo </span>72756c6520666c6172656f6e207b20737472696e67733a202466203d20223152756c65414461794b333370244d616c773472334177347940666c6172652d6f6e2e636f6d2220636f6e646974696f6e3a202466207d | xxd <span class="nt">-r</span> <span class="nt">-p</span>
+rule flareon <span class="o">{</span> strings: <span class="nv">$f</span> <span class="o">=</span> <span class="s2">"1RuleADayK33p</span><span class="nv">$Malw4r3Aw4y</span><span class="s2">@flare-on.com"</span> condition: <span class="nv">$f</span> <span class="o">}</span>
+</pre></table></code></div></div><h2 id="continuation"><span class="me-2">Continuation</span><a href="#continuation" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2><p>Check the following post <a href="/posts/flare-on-11-write-up-part-2/">here</a></p></div><div class="post-tail-wrapper text-muted"><div class="post-meta mb-3"> <i class="far fa-folder-open fa-fw me-1"></i> <a href="//categories/hacking/">Hacking</a>, <a href="//categories/software/">Software</a></div><div class="post-tags"> <i class="fa fa-tags fa-fw me-1"></i> <a href="//tags/hacking/" class="post-tag no-text-decoration" >hacking</a> <a href="//tags/software/" class="post-tag no-text-decoration" >software</a> <a href="//tags/capture-the-flag/" class="post-tag no-text-decoration" >capture the flag</a> <a href="//tags/write-up/" class="post-tag no-text-decoration" >write-up</a> <a href="//tags/golang/" class="post-tag no-text-decoration" >golang</a> <a href="//tags/reverse-engineering/" class="post-tag no-text-decoration" >reverse engineering</a></div><div class=" post-tail-bottom d-flex justify-content-between align-items-center mt-5 pb-2 " ><div class="license-wrapper"> This post is licensed under <a href="https://creativecommons.org/licenses/by/4.0/"> CC BY 4.0 </a> by the author.</div><div class="share-wrapper d-flex align-items-center"> <span class="share-label text-muted">Share</span> <span class="share-icons"> <a href="https://twitter.com/intent/tweet?text=Flare-On%2011%20Write-Up%20Part%201%20-%20vik0t0r&url=https%3A%2F%2Fvik0t0r.github.io%2Fposts%2Fflare-on-11-write-up-part-1%2F" target="_blank" rel="noopener" data-bs-toggle="tooltip" data-bs-placement="top" title="Twitter" aria-label="Twitter"> <i class="fa-fw fa-brands fa-square-x-twitter"></i> </a> <a href="https://www.facebook.com/sharer/sharer.php?title=Flare-On%2011%20Write-Up%20Part%201%20-%20vik0t0r&u=https%3A%2F%2Fvik0t0r.github.io%2Fposts%2Fflare-on-11-write-up-part-1%2F" target="_blank" rel="noopener" data-bs-toggle="tooltip" data-bs-placement="top" title="Facebook" aria-label="Facebook"> <i class="fa-fw fab fa-facebook-square"></i> </a> <a href="https://t.me/share/url?url=https%3A%2F%2Fvik0t0r.github.io%2Fposts%2Fflare-on-11-write-up-part-1%2F&text=Flare-On%2011%20Write-Up%20Part%201%20-%20vik0t0r" target="_blank" rel="noopener" data-bs-toggle="tooltip" data-bs-placement="top" title="Telegram" aria-label="Telegram"> <i class="fa-fw fab fa-telegram"></i> </a> <button id="copy-link" aria-label="Copy link" class="btn small" data-bs-toggle="tooltip" data-bs-placement="top" title="Copy link" data-title-succeed="Link copied successfully!" > <i class="fa-fw fas fa-link pe-none fs-6"></i> </button> </span></div></div></div></article></main><aside aria-label="Panel" id="panel-wrapper" class="col-xl-3 ps-2 text-muted"><div class="access"><section id="access-lastmod"><h2 class="panel-heading">Recently Updated</h2><ul class="content list-unstyled ps-0 pb-1 ms-1 mt-2"><li class="text-truncate lh-lg"> <a href="/posts/mitm-flutter-apps-on-android-emulator/">Mitm flutter apps on android emulator</a><li class="text-truncate lh-lg"> <a href="/posts/flare-on-11-write-up-part-2/">Flare-On 11 Write-Up Part 2</a><li class="text-truncate lh-lg"> <a href="/posts/flare-on-11-write-up-part-3/">Flare-On 11 Write-Up Part 3</a><li class="text-truncate lh-lg"> <a href="/posts/flare-on-11-write-up-part-1/">Flare-On 11 Write-Up Part 1</a><li class="text-truncate lh-lg"> <a href="/posts/some-cool-photos-which-can-be-use-as-wallapapers/">Some cool photos which can be use as Wallpapers</a></ul></section><section><h2 class="panel-heading">Trending Tags</h2><div class="d-flex flex-wrap mt-3 mb-1 me-3"> <a class="post-tag btn btn-outline-primary" href="/tags/hacking/">hacking</a> <a class="post-tag btn btn-outline-primary" href="/tags/reverse-engineering/">reverse engineering</a> <a class="post-tag btn btn-outline-primary" href="/tags/software/">software</a> <a class="post-tag btn btn-outline-primary" href="/tags/capture-the-flag/">capture the flag</a> <a class="post-tag btn btn-outline-primary" href="/tags/write-up/">write-up</a> <a class="post-tag btn btn-outline-primary" href="/tags/android/">android</a> <a class="post-tag btn btn-outline-primary" href="/tags/golang/">golang</a> <a class="post-tag btn btn-outline-primary" href="/tags/electronics/">electronics</a> <a class="post-tag btn btn-outline-primary" href="/tags/flutter/">flutter</a> <a class="post-tag btn btn-outline-primary" href="/tags/frida/">frida</a></div></section></div><div class="toc-border-cover z-3"></div><section id="toc-wrapper" class="invisible position-sticky ps-0 pe-4 pb-4"><h2 class="panel-heading ps-3 pb-2 mb-0">Contents</h2><nav id="toc"></nav></section></aside></div><div class="row"><div id="tail-wrapper" class="col-12 col-lg-11 col-xl-9 px-md-4"><aside id="related-posts" aria-labelledby="related-label"><h3 class="mb-4" id="related-label">Further Reading</h3><nav class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4 mb-4"><article class="col"> <a href="/posts/flare-on-11-write-up-part-3/" class="post-preview card h-100"><div class="card-body"> <time data-ts="1733580420" data-df="ll" > Dec 7, 2024 </time><h4 class="pt-0 my-2">Flare-On 11 Write-Up Part 3</h4><div class="text-muted"><p>This is the third post in my Flare-On 11 series. If you haven’t already, I recommend checking out the previous writeup to get up to speed. As with the first post, you can find supplementary resour...</p></div></div></a></article><article class="col"> <a href="/posts/flare-on-11-write-up-part-2/" class="post-preview card h-100"><div class="card-body"> <time data-ts="1733069220" data-df="ll" > Dec 1, 2024 </time><h4 class="pt-0 my-2">Flare-On 11 Write-Up Part 2</h4><div class="text-muted"><p>This is the second post in my Flare-On 11 series. If you haven’t already, I recommend checking out the previous writeup to get up to speed. As with the first post, you can find supplementary resou...</p></div></div></a></article><article class="col"> <a href="/posts/Gopherjs-reverse-engineering/" class="post-preview card h-100"><div class="card-body"> <time data-ts="1703083800" data-df="ll" > Dec 20, 2023 </time><h4 class="pt-0 my-2">Gopherjs reverse engineering</h4><div class="text-muted"><p>Introduction Gopherjs is a compiler for the go language which compiles to pure javascript, it can be used to write go code which is executed on a webrowser, or where I found it, on a cordova app, w...</p></div></div></a></article></nav></aside><nav class="post-navigation d-flex justify-content-between" aria-label="Post Navigation"> <a href="//posts/Gopherjs-reverse-engineering/" class="btn btn-outline-primary" aria-label="Older" ><p>Gopherjs reverse engineering</p></a> <a href="//posts/flare-on-11-write-up-part-2/" class="btn btn-outline-primary" aria-label="Newer" ><p>Flare-On 11 Write-Up Part 2</p></a></nav><footer aria-label="Site Info" class=" d-flex flex-column justify-content-center text-muted flex-lg-row justify-content-lg-between align-items-lg-center pb-lg-3 " ><p>© <time>2025</time> <a href="https://github.com/vik0t0r">Victor de Pedraza Ajenjo</a>. <span data-bs-toggle="tooltip" data-bs-placement="top" title="Except where otherwise noted, the blog posts on this site are licensed under the Creative Commons Attribution 4.0 International (CC BY 4.0) License by the author." >Some rights reserved.</span></p><p>Using the <a data-bs-toggle="tooltip" data-bs-placement="top" title="v7.2.4" href="https://github.com/cotes2020/jekyll-theme-chirpy" target="_blank" rel="noopener" >Chirpy</a> theme for <a href="https://jekyllrb.com" target="_blank" rel="noopener">Jekyll</a>.</p></footer></div></div><div id="search-result-wrapper" class="d-flex justify-content-center d-none"><div class="col-11 content"><div id="search-hints"><section><h2 class="panel-heading">Trending Tags</h2><div class="d-flex flex-wrap mt-3 mb-1 me-3"> <a class="post-tag btn btn-outline-primary" href="/tags/hacking/">hacking</a> <a class="post-tag btn btn-outline-primary" href="/tags/reverse-engineering/">reverse engineering</a> <a class="post-tag btn btn-outline-primary" href="/tags/software/">software</a> <a class="post-tag btn btn-outline-primary" href="/tags/capture-the-flag/">capture the flag</a> <a class="post-tag btn btn-outline-primary" href="/tags/write-up/">write-up</a> <a class="post-tag btn btn-outline-primary" href="/tags/android/">android</a> <a class="post-tag btn btn-outline-primary" href="/tags/golang/">golang</a> <a class="post-tag btn btn-outline-primary" href="/tags/electronics/">electronics</a> <a class="post-tag btn btn-outline-primary" href="/tags/flutter/">flutter</a> <a class="post-tag btn btn-outline-primary" href="/tags/frida/">frida</a></div></section></div><div id="search-results" class="d-flex flex-wrap justify-content-center text-muted mt-3"></div></div></div></div><aside aria-label="Scroll to Top"> <button id="back-to-top" type="button" class="btn btn-lg btn-box-shadow"> <i class="fas fa-angle-up"></i> </button></aside></div><div id="mask" class="d-none position-fixed w-100 h-100 z-1"></div><aside id="notification" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-animation="true" data-bs-autohide="false" ><div class="toast-header"> <button type="button" class="btn-close ms-auto" data-bs-dismiss="toast" aria-label="Close" ></button></div><div class="toast-body text-center pt-0"><p class="px-2 mb-3">A new version of content is available.</p><button type="button" class="btn btn-primary" aria-label="Update"> Update </button></div></aside><script> document.addEventListener('DOMContentLoaded', () => { SimpleJekyllSearch({ searchInput: document.getElementById('search-input'), resultsContainer: document.getElementById('search-results'), json: '/assets/js/data/search.json', searchResultTemplate: '<article class="px-1 px-sm-2 px-lg-4 px-xl-0"><header><h2><a href="{url}">{title}</a></h2><div class="post-meta d-flex flex-column flex-sm-row text-muted mt-1 mb-1"> {categories} {tags}</div></header><p>{content}</p></article>', noResultsText: '<p class="mt-5">Oops! No results found.</p>', templateMiddleware: function(prop, value, template) { if (prop === 'categories') { if (value === '') { return `${value}`; } else { return `<div class="me-sm-4"><i class="far fa-folder fa-fw"></i>${value}</div>`; } } if (prop === 'tags') { if (value === '') { return `${value}`; } else { return `<div><i class="fa fa-tag fa-fw"></i>${value}</div>`; } } } }); }); </script>
