@@ -7,7 +7,7 @@ tags: [hacking, software, capture the flag, write-up, golang, reverse engineerin
 media_subpath: /assets/img/flareon11/
 ---
 
-Over the past few weeks, I took part in the eleventh [FLARE-ON](http://flare-on.com) Reverse Engineering Capture-the-Flag (CTF) competition. 
+Over the past few weeks, I took part in the eleventh [FLARE-ON](https://flare-on.com) Reverse Engineering Capture-the-Flag (CTF) competition. 
 
 I managed to solve 6 out of the 10 challenges in this year’s Flare-On, picking up some great experience and learning more about Reverse Engineering along the way. The competition was tough but fun, and I’m already looking forward to next year’s event.
 

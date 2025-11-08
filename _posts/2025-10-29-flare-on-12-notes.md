@@ -8,7 +8,7 @@ tags: [hacking, software, capture the flag, write-up, reverse engineering]
 
 I finished Flare-On 12 this year — what a ride. I planned to write full write-ups for each challenge, but that is just unrealistic: some challenges took a long time and I have already forgotten how to solve som of them. Also there are . Instead, I decided to upload my notes and tooling to GitHub so I don’t lose them and others can reuse what was useful.
 
-You can find the repo here: https://github.com/vik0t0r/flare-on-12
+You can find the repo here: [https://github.com/vik0t0r/flare-on-12](https://github.com/vik0t0r/flare-on-12)
 
 ## What’s in the repo
 
