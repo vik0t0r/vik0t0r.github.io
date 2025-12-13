@@ -7,9 +7,21 @@ tags: [hacking, embedded, reverse engineering, arduino, esp32]
 media_subpath: /assets/img/arduino/
 ---
 ## Introduction
-ESP32 is a popular SoC made by espressif systems, espressif provides developers with the esp-idf a development framewor, however most hobbiest use arduino which is built as an abstracion layer on top of esp-idf.
 
-In this blogpost we will explore how we can use ghidra to decompile a esp32 arduino binary and find what is it doing. For this example we will be using an example program created for the purpose, then we have to create signatures for known functions for as much code as posible and then we have to load it into ghidra
+The ESP32 is a very popular SoC from Espressif Systems. While Espressif provides the **ESP-IDF** as its official development framework, most hobbyist projects are built using **Arduino**, which acts as a higher-level abstraction layer on top of ESP-IDF.
+
+From a reverse-engineering perspective, this abstraction is a double-edged sword. On one hand, Arduino makes development fast and accessible; on the other, it hides the structure of the original program once everything is compiled into a raw flash image with no symbols, no type information, and very little high-level context left.
+
+In this blog post, we’ll walk through a practical, end-to-end workflow for decompiling an **Arduino-ESP32 binary** using **Ghidra**, and making sense of what it actually does.
+
+We’ll start from a simple Arduino sketch created specifically for this purpose, compile it ourselves, and then work backwards from the generated firmware. Along the way, we’ll:
+- Extract and understand the relevant flash images,
+- Generate **Function ID** signatures from a known ELF,
+- Load the stripped binary into Ghidra using a custom ESP32 loader,
+- And finally, clean up and fix the decompiler output to recover `app_main()`, `setup()`, and `loop()`.
+
+Although the example firmware is intentionally simple, the techniques shown here apply equally well to real-world ESP32 devices where you only have access to a `.bin` or a full flash dump and no source code at all.
+
 
 ## Step 1: Obtaining the .bin file
 
@@ -22,7 +34,7 @@ I’ll use:
 
 > All commands below assume Linux.
 
-### 1. Example sketch (TX packet every second)
+### Example sketch (TX packet every second)
 
 For the rest of the post, I’ll use the following minimal example that configures a CC1101 and sends `"Hello world!"` every second.
 
@@ -93,7 +105,7 @@ void loop() {
 }
 ```
 
-### 2. Install arduino-cli
+### Install arduino-cli
 
 The easiest way to get a build from the command line is with `arduino-cli`. The official project provides a small install script you can fetch with `curl`.  
 
@@ -103,7 +115,7 @@ From any directory:
 curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh
 ```
 
-### 3. Configure arduino-cli for ESP32
+### Configure arduino-cli for ESP32
 
 First, create a default configuration file:
 
@@ -133,7 +145,7 @@ arduino-cli core list
 
 After `core install` finishes, `core list` should show an entry like `esp32:esp32 3.3.4`.
 
-### 4. Install the CC1101 library
+### Install the CC1101 library
 
 Install 
 
@@ -142,7 +154,7 @@ arduino-cli lib search CC1101
 arduino-cli lib install CC1101@1.2.0
 ```
 
-### 5. Create the project folder and compile for ESP32
+### Create the project folder and compile for ESP32
 
 Create a project folder and put the sketch inside:
 
@@ -168,7 +180,7 @@ After compilation, you should see a directory such as `build/esp32.esp32.esp32/`
 
 ---
 
-### 6. Understanding the generated files
+### Understanding the generated files
 
 Inside `build/esp32.esp32.esp32/` you should find at least these files:
 
@@ -186,7 +198,9 @@ Inside `build/esp32.esp32.esp32/` you should find at least these files:
 
 > The addresses above (`0x1000`, `0x8000`, `0x10000`) are the standard ones for the default 4 MB Arduino-ESP32 partition scheme. If a custom partition layout is used, those offsets can change.
 
-### 7. Flashing the three binaries separately (reference)
+### Flashing the three binaries separately (reference)
+
+> Note: This section is informational. If you already have `project.ino.bin`, you can skip ahead to **Step 2: Generate Function ID signatures**.
 
 If we wanted to flash this firmware to a board from these three files individually, we would use a command similar to:
 
@@ -199,7 +213,7 @@ esptool.py --chip esp32 --port /dev/ttyUSB0 --baud 460800 write_flash \
 
 This is the “classic” way: tell `esptool` which file goes at which offset.
 
-### 8. Reading back the full flash from a real device
+### Reading back the full flash from a real device
 
 > If the target device uses Flash Encryption or Secure Boot, the dumped flash will be encrypted and not directly usable in Ghidra.
 
@@ -318,7 +332,7 @@ MMU page size: 64 KB
 Secure version: 0
 ```
 
-### 10. Getting the Arduino-ESP32 version
+### Getting the Arduino-ESP32 version
 
 You can often recover the **exact Arduino-ESP32 core version** used to build the firmware by inspecting strings embedded in the full flash dump:
 
@@ -548,11 +562,79 @@ Once configured, start the analysis and wait for it to finish.
 
 ## Step 4: Analysis
 
-### Useful xtensa sillica architecture tips
+Now comes the fun part. Before diving into reverse engineering, you should probably read  
+[A short guide to Xtensa assembly language](http://cholla.mmto.org/esp8266/xtensa.html), as it explains several peculiarities of the architecture.
 
-### Setup()
+One of the most relevant aspects is that Xtensa instructions are usually **24 bits wide**. This makes it impossible to encode full 32-bit addresses directly inside instructions. As a consequence, pointers are typically stored in nearby memory locations and loaded indirectly, rather than being embedded directly in the instruction stream.
 
-### Loop()
+Another important aspect is the calling convention, which is admittedly quite messy. I haven’t really dived deeply into its exact details, mainly because Ghidra does a surprisingly good job at figuring out which arguments live in which registers.
+
+### Fixing decompiler output
+
+After loading the binary, Ghidra will ask whether you want to jump to the `main` symbol. This is a lie. That entry point belongs to the bootloader, and there is no practical way to reach the actual application code from there.
+
+Instead, you should search for the `xTaskCreateUniversal` function. Arduino uses this routine to create its main FreeRTOS task, which is responsible for calling `setup()` and repeatedly executing `loop()`.
+
+![app_main code messed up](app_main_messed_up.png)
+
+As you can see, Ghidra fails to properly resolve the constants used in this function call. This happens because pointers are stored as data, and for some reason Ghidra fails to detect that they are pointers, attempting to decompile them as code instead:
+
+![app_main code messed up 2](app_main_messed_up_2.png)
+
+Luckily, this has an easy fix. Simply select the constant area, clear it using the `c` key, and then re-apply the pointer data type using the `P` key.
+
+![app_main code messed up 3](app_main_messed_up_3.png)
+
+By default, Ghidra assumes that pointers are mutable, meaning they can be modified at runtime. However, if we take a closer look at these pointers, we can see that they are only ever read. This means we can safely mark them as constants, which significantly improves the decompiler output.
+
+To do this, right-click on a pointer and choose **Data → Default Settings**, then change the mutability to `constant`:
+
+![change mutability](change_mutability.png)
+
+After doing this, the decompiler output becomes much cleaner. Looks like magic:
+
+![code not so messed up](code_not_so_messed_up.png)
+
+We are still missing one final fix. Ghidra sometimes fails to correctly identify function boundaries. In this case, it is clear that the first parameter to `xTaskCreateUniversal` is the entry point of the task to execute. However, this entry point has not been decompiled correctly.
+
+To fix this, we need to clear the code bytes at the wrong location, then start disassembly at the correct address and explicitly create a function there.
+
+So we go from this:
+
+![wrong function entry](wrong_func_entry.png)
+
+To this, look how the entry point of the function uses the `entry` instruction:
+
+![fixed function](fixed_function.png)
+
+This leaves us with a nice and clean `app_main()`, whose only job is to launch the Arduino `loopTask`:
+
+![fixed app main](fixed_appmain.png)
+
+From this function, we can then reverse engineer `setup()` and `loop()`:
+
+![arduino entry](arduinoEntry.png)
+
+For example, here is the `setup()` function.
+
+Before fixing constants:
+
+![Setup before fixing constants](setup_before_fixing_constants.png)
+
+After fixing constants:
+
+![Setup after fixing constants](setup_after_fixing_constants.png)
 
 ## Conclusion
 
+## Conclusion
+
+Reverse engineering an Arduino-based ESP32 firmware may look daunting at first, but with the right workflow it becomes quite manageable. The same approach scales well beyond the simple example shown here and can be applied to real-world ESP32 firmware when the source code is no longer available.
+
+In the future, it could be interesting to write a custom Ghidra analyzer that automatically fixes up pointer types and avoids breaking function boundaries. But that’s a topic for another time.
+
+## References
+1. [A curated list of ESP32 related reversing resources](https://github.com/BlackVS/ESP32-reversing)
+2. [A short guide to Xtensa assembly language](http://cholla.mmto.org/esp8266/xtensa.html)
+3. [Ghidra ESP32 flash loader](https://github.com/dynacylabs/ghidra-esp32-flash-loader)
+3. [0x6d696368 tutorial about Ghidra's Function ID](https://www.youtube.com/watch?v=P8Ul2K7pEfU)
