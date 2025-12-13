@@ -348,6 +348,10 @@ If you’re reversing some random firmware, you obviously won’t have access to
 
 > Tip: Create a signatures folder inside your Ghidra project as you can only select folders for Function ID generation. This is where you’ll drop the ELF files you want to generate .fidb signatures from. 
 
+Example parameters for creating Function ID signatures:
+
+![function_id_parameter](fidb_options.png)
+
 #### Flatten namespaces into function names
 
 When dealing with classes names, function ID does only store the name of the function and not the class, so it is interesting to run the following script that puts the name of the class as part of the function name, so we don't end up with multiple functions with the same name:
@@ -495,10 +499,52 @@ Script run example:
 | ![input_example](functionRename_input.png) | ![output_example](functionRename_output.png) |
 
 
-## Step 3: Loading the project into ghidra 
+## Step 3: Loading the project into Ghidra
 
-Now it comes the big deal, for loading the project.ino.bin file into ghidra we will be using [ghidra-esp32-flash-loader](https://github.com/dynacylabs/ghidra-esp32-flash-loader)
+Now comes the big step: loading the `project.ino.bin` file into Ghidra. For this, we will use  
+[ghidra-esp32-flash-loader](https://github.com/vik0t0r/ghidra-esp32-flash-loader).
 
+I found an issue in the upstream loader, so I strongly recommend using the corrected branch:
+
+```bash
+git clone https://github.com/vik0t0r/ghidra-esp32-flash-loader.git
+cd ghidra-esp32-flash-loader
+git checkout fix-segment-loading
+```
+
+And don’t forget to initialize and download the submodules!!!
+
+```bash
+git submodule update --init --recursive
+```
+
+Now we can build the plugin. Make sure to update the path so it points to your actual Ghidra installation directory:
+
+```bash
+export GHIDRA_INSTALL_DIR=~/ghidra_11.4.2_PUBLIC
+gradle
+```
+
+If everything goes well, you should now have an installable `.zip` plugin inside the `dist` folder.  
+Install this extension in Ghidra via **File → Install Extensions**, restart Ghidra, and you’re good to go.
+
+If everything worked correctly, loading `platform.ino.bin` will be recognized automatically, and the ESP32 flash loader will be available:
+
+![loader](loader.png){: width="600" }
+
+### First Analysis
+
+When the binary is first loaded, Ghidra will prompt you to analyze the program. Choose **Yes**, and make sure to adjust the **Function ID** analyzer options.
+
+Lower the following parameters:
+- **Instruction count threshold**: from `14.6` to `7`
+- **Multiple match threshold**: from `30` to `15`
+
+I’ve found that if you don’t lower these values, most functions will not be recognized correctly.
+
+![analysis](analysis_options.png)
+
+Once configured, start the analysis and wait for it to finish.
 
 ## Step 4: Analysis
 
