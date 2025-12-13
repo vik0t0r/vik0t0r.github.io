@@ -627,8 +627,6 @@ After fixing constants:
 
 ## Conclusion
 
-## Conclusion
-
 Reverse engineering an Arduino-based ESP32 firmware may look daunting at first, but with the right workflow it becomes quite manageable. The same approach scales well beyond the simple example shown here and can be applied to real-world ESP32 firmware when the source code is no longer available.
 
 In the future, it could be interesting to write a custom Ghidra analyzer that automatically fixes up pointer types and avoids breaking function boundaries. But that’s a topic for another time.
