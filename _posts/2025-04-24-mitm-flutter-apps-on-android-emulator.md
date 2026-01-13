@@ -70,7 +70,13 @@ If everything has worked out, launching the app should cause it to freeze at sta
 
 ## Step 3: Use frida to remove the certificate checks
 
-We will use [this script](https://github.com/NVISOsecurity/disable-flutter-tls-verification) to disable TLS certificate validation. However, on emulators, loaded libraries may not appear with `Process.findModuleByName()`, so we need to disable the check.
+We will use [this script](https://github.com/NVISOsecurity/disable-flutter-tls-verification) to disable TLS certificate validation. 
+
+
+On emulators, loaded libraries may not appear with `Process.findModuleByName()`, so ~~we need to disable the check~~.
+
+This has been fixed on [issue 43](https://github.com/NVISOsecurity/disable-flutter-tls-verification/issues/43) and the upstream version should work without problems.
+
 
 Change the following lines:
 

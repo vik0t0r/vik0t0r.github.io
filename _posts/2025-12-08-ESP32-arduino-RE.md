@@ -516,14 +516,22 @@ Script run example:
 ## Step 3: Loading the project into Ghidra
 
 Now comes the big step: loading the `project.ino.bin` file into Ghidra. For this, we will use  
-[ghidra-esp32-flash-loader](https://github.com/vik0t0r/ghidra-esp32-flash-loader).
+[ghidra-esp32-flash-loader](https://github.com/dynacylabs/ghidra-esp32-flash-loader).
 
-I found an issue in the upstream loader, so I strongly recommend using the corrected branch:
+I found an issue in the upstream loader, so ~~I strongly recommend using the corrected branch:~~
+
+If you want to use a ghidra version previous to 12 (which had some breaking changes for plugins) you should do:
 
 ```bash
 git clone https://github.com/vik0t0r/ghidra-esp32-flash-loader.git
 cd ghidra-esp32-flash-loader
 git checkout fix-segment-loading
+```
+
+If not, you can get the upstream version (which works with ghidra 12 and has the fixes applied):
+```bash
+git clone https://github.com/dynacylabs/ghidra-esp32-flash-loader
+cd ghidra-esp32-flash-loader
 ```
 
 And don’t forget to initialize and download the submodules!!!
